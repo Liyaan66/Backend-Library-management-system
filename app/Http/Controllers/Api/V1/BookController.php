@@ -13,7 +13,7 @@ class BookController extends Controller
      */
     public function index()
     {
-        return Book::get();
+        return Book::with('category')->get();
     }
 
     /**
@@ -21,17 +21,12 @@ class BookController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:books,email',
-            'password' => 'required|string|min:6|confirmed',
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'category_id' => 'required|exists:categories,id',
         ]);
 
-        $book = Book::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
-        ]);
+        $book = Book::create($validated);
 
         return response()->json([
             'message' => 'Book created successfully',
@@ -44,8 +39,7 @@ class BookController extends Controller
      */
     public function show(string $id)
     {
-        $book = Book::with('categories')->findOrFail($id);
-
+        $book = Book::with('category')->findOrFail($id);
         return response()->json($book);
     }
 
@@ -56,17 +50,12 @@ class BookController extends Controller
     {
         $book = Book::findOrFail($id);
 
-        $request->validate([
-            'name' => 'sometimes|required|string|max:255',
-            'email' => 'sometimes|required|string|email|max:255|unique:books,email,' . $id,
-            'password' => 'nullable|string|min:6|confirmed',
+        $validated = $request->validate([
+            'title' => 'sometimes|required|string|max:255',
+            'category_id' => 'sometimes|required|exists:categories,id',
         ]);
 
-        $book->update([
-            'name' => $request->name ?? $book->name,
-            'email' => $request->email ?? $book->email,
-            'password' => $request->filled('password') ? bcrypt($request->password) : $book->password,
-        ]);
+        $book->update($validated);
 
         return response()->json([
             'message' => 'Book updated successfully',

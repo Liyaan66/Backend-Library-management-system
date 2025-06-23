@@ -10,6 +10,7 @@ class Book extends Model
 {
     /** @use HasFactory<\Database\Factories\BookFactory> */
     use HasFactory;
+    protected $fillable = ['title', 'category_id'];
     public function category()
     {
         return $this->belongsTo(Category::class);
