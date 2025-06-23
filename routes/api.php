@@ -34,3 +34,7 @@ Route::prefix('v1')->group(function (){
     Route::apiResource('timetables', TimetableController::class);
 });
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 07647284e158369339baaf057b2fcf8db1818094

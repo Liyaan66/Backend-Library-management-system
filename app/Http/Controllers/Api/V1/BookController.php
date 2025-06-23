@@ -22,11 +22,17 @@ class BookController extends Controller
      */
     public function store(Request $request)
     {
-         $request->validate([
-            'name' => 'require|string|max:25',
-            'email' => 'require|string|email|max:25|unique',
-            'password' => 'require|string|min:6|comfirmed',
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'category_id' => 'required|exists:categories,id',
         ]);
+
+        $book = Book::create($validated);
+
+        return response()->json([
+            'message' => 'Book created successfully',
+            'data' => $book
+        ], 201);
     }
 
     /**
@@ -34,7 +40,8 @@ class BookController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $book = Book::with('category')->findOrFail($id);
+        return response()->json($book);
     }
 
     /**
@@ -42,7 +49,19 @@ class BookController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $book = Book::findOrFail($id);
+
+        $validated = $request->validate([
+            'title' => 'sometimes|required|string|max:255',
+            'category_id' => 'sometimes|required|exists:categories,id',
+        ]);
+
+        $book->update($validated);
+
+        return response()->json([
+            'message' => 'Book updated successfully',
+            'data' => $book
+        ]);
     }
 
     /**
@@ -50,6 +69,11 @@ class BookController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $book = Book::findOrFail($id);
+        $book->delete();
+
+        return response()->json([
+            'message' => 'Book deleted successfully'
+        ]);
     }
 }

@@ -21,7 +21,19 @@ class BorrowBookController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'book_id' => 'required|exists:books,id',
+            'reader_id' => 'required|exists:readers,id',
+            'borrowed_at' => 'required|date',
+            'due_date' => 'required|date|after:borrowed_at',
+        ]);
+
+        $borrow = BorrowBook::create($validated);
+
+        return response()->json([
+            'message' => 'Borrow record created successfully',
+            'data' => $borrow
+        ], 201);
     }
 
     /**
@@ -37,7 +49,21 @@ class BorrowBookController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $borrow = BorrowBook::findOrFail($id);
+
+        $validated = $request->validate([
+            'book_id' => 'sometimes|exists:books,id',
+            'reader_id' => 'sometimes|exists:readers,id',
+            'borrowed_at' => 'sometimes|date',
+            'due_date' => 'sometimes|date|after:borrowed_at',
+        ]);
+
+        $borrow->update($validated);
+
+        return response()->json([
+            'message' => 'Borrow record updated successfully',
+            'data' => $borrow
+        ]);
     }
 
     /**
@@ -45,6 +71,11 @@ class BorrowBookController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $borrow = BorrowBook::findOrFail($id);
+        $borrow->delete();
+
+        return response()->json([
+            'message' => 'Borrow record deleted successfully'
+        ]);
     }
 }
