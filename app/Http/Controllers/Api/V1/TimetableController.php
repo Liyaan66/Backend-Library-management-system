@@ -13,7 +13,7 @@ class TimetableController extends Controller
      */
     public function index()
     {
-      return Timetable::all();
+      return response()->json(Timetable::with('bookkeeper')->get(), 200);
     }
 
     /**
@@ -21,7 +21,16 @@ class TimetableController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'bookkeeper_id' => 'required|exists:book_keepers,id',
+            'date' => 'required|date',
+            'open_hour' => 'required|date_format:H:i',
+            'close_hour' => 'required|date_format:H:i',
+        ]);
+
+        $timetable = Timetable::create($validated);
+
+        return response()->json($timetable, 201);
     }
 
     /**
@@ -29,7 +38,13 @@ class TimetableController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $timetable = Timetable::with('bookkeeper')->find($id);
+
+        if (!$timetable) {
+            return response()->json(['message' => 'Timetable not found'], 404);
+        }
+
+        return response()->json($timetable);
     }
 
     /**
@@ -37,7 +52,22 @@ class TimetableController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $timetable = Timetable::find($id);
+
+        if (!$timetable) {
+            return response()->json(['message' => 'Timetable not found'], 404);
+        }
+
+        $validated = $request->validate([
+            'bookkeeper_id' => 'sometimes|exists:book_keepers,id',
+            'date' => 'sometimes|date',
+            'open_hour' => 'sometimes|date_format:H:i',
+            'close_hour' => 'sometimes|date_format:H:i',
+        ]);
+
+        $timetable->update($validated);
+
+        return response()->json($timetable);
     }
 
     /**
@@ -45,6 +75,14 @@ class TimetableController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $timetable = Timetable::find($id);
+
+        if (!$timetable) {
+            return response()->json(['message' => 'Timetable not found'], 404);
+        }
+
+        $timetable->delete();
+
+        return response()->json(['message' => 'Timetable deleted']);
     }
 }
