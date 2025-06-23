@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\BookKeeper;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +18,7 @@ class TimetableFactory extends Factory
     public function definition(): array
     {
         return [
-            'bookkeeper_id' => \App\Models\BookKeeper::factory(),
+            'bookkeeper_id' => BookKeeper::factory(),
             'date' => $this->faker->date(),
             'open_hour' => $this->faker->time('H:i'),
             'close_hour' => $this->faker->time('H:i'),

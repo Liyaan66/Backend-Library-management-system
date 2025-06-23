@@ -13,8 +13,7 @@ class ReaderController extends Controller
      */
     public function index()
     {
-      return Reader::all();
-
+        return Reader::all();
     }
 
     /**
@@ -22,12 +21,17 @@ class ReaderController extends Controller
      */
     public function store(Request $request)
     {
-         $request->validate([
-            'name' => 'require|string|max:25',
-            'email' => 'require|string|email|max:25|unique',
-            'gender' => 'require|string',
+        $data = $request->validate([
+            'name' => 'required|string',
+            'email' => 'required|email',
+            'gender' => 'required|string'
         ]);
+
+        Reader::create($data);
+
+        return response()->json(['message' => 'Reader added successfully'], 201);
     }
+
 
     /**
      * Display the specified resource.
