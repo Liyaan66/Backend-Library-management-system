@@ -19,6 +19,7 @@ class Book extends Model
         return $this->belongsTo(BookKeeper::class);
     }
 
+
     public function readers()
     {
         return $this->belongsToMany(Reader::class, 'book_borrow')

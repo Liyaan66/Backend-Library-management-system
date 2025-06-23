@@ -9,7 +9,7 @@ class BookKeeperController extends Controller
     public function index()
     {
         // Correct relationships
-        return BookKeeper::with(['books', 'timetables'])->get();
+        return BookKeeper::get();
     }
 
     public function store(Request $request)

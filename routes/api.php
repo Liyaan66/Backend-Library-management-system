@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\V1\BookController;
+use App\Http\Controllers\Api\V1\BookKeeperController;
 use App\Http\Controllers\Api\V1\BorrowBookController;
 use App\Http\Controllers\Api\V1\CategoryController;
 use App\Http\Controllers\Api\V1\ReaderController;
@@ -24,16 +25,13 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
-// Route::prefix('v1')->group(function (){
-//     Route::apiResource('books', BookController::class);
-//     Route::apiResource('categories', CategoryController::class);
-//     Route::apiResource('readers', ReaderController::class);
-//     Route::apiResource('bookkeepers', BookKeeperController::class);
-//     Route::apiResource('borrow-books', BorrowBookController::class);
-//     Route::apiResource('timetables', TimetableController::class);
-// });
-
-
-Route::prefix('v1')->group(function () {
-    Route::apiResource('bookkeepers', \App\Http\Controllers\Api\V1\BookKeeperController::class);
+Route::prefix('v1')->group(function (){
+    Route::apiResource('books', BookController::class);
+    Route::apiResource('categories', CategoryController::class);
+    Route::apiResource('readers', ReaderController::class);
+    Route::apiResource('bookkeepers', BookKeeperController::class);
+    Route::apiResource('borrow-books', BorrowBookController::class);
+    Route::apiResource('timetables', TimetableController::class);
 });
+
+
