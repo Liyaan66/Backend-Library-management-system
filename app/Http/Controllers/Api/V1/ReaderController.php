@@ -38,7 +38,7 @@ class ReaderController extends Controller
      */
     public function show(string $id)
     {
-        //
+        return Reader::find($id);
     }
 
     /**
@@ -46,7 +46,21 @@ class ReaderController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $reader = Reader::find($id);
+
+        if (!$reader) {
+            return response()->json(['message' => 'reader not found'], 404);
+        }
+
+        $validated = $request->validate([
+            'name' => 'sometimes|string|max:255',
+            'email' => 'sometimes|email',
+            'gender' => 'sometimes|string'
+        ]);
+
+        $reader->update($validated);
+
+        return response()->json($reader);
     }
 
     /**
@@ -54,6 +68,14 @@ class ReaderController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $reader = Reader::find($id);
+
+        if (!$reader) {
+            return response()->json(['message' => 'reader not found'], 404);
+        }
+
+        $reader->delete();
+
+        return response()->json(['message' => 'reader deleted successfully']);
     }
 }

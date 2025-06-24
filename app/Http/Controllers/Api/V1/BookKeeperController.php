@@ -26,7 +26,7 @@ class BookKeeperController extends Controller
 
     public function show(string $id)
     {
-        return BookKeeper::with(['books', 'timetables'])->findOrFail($id);
+        return BookKeeper::find($id);
     }
 
     public function update(Request $request, string $id)
