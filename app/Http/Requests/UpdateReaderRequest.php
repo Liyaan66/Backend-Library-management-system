@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateBookKeeperRequest extends FormRequest
+class UpdateReaderRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -21,8 +21,12 @@ class CreateBookKeeperRequest extends FormRequest
      */
     public function rules(): array
     {
+        $readerId = $this->route('id'); // Get the ID from route
+
         return [
-            'name' => 'required|string|max:25',
+            'name' => 'sometimes|required|string|max:25',
+            'email' => 'sometimes|required|string|email|max:255|unique:readers,email,' . $readerId,
+            'gender' => 'sometimes|required|string',
         ];
     }
 }

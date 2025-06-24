@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateBookKeeperRequest extends FormRequest
+class CreateReaderRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,6 +23,8 @@ class CreateBookKeeperRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:25',
+            'email' => 'required|string|email|max:255|unique:readers,email',
+            'gender' => 'required|string',
         ];
     }
 }

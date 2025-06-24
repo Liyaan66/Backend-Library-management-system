@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CreateBookRequest;
+use App\Http\Requests\UpdateBookRequest;
 use App\Models\Book;
 use Illuminate\Http\Request;
 
@@ -19,13 +21,9 @@ class BookController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+        public function store(CreateBookRequest $request)
     {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'category_id' => 'required|exists:categories,id',
-        ]);
-
+        $validated = $request->validated();
         $book = Book::create($validated);
 
         return response()->json([
@@ -46,15 +44,10 @@ class BookController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+     public function update(UpdateBookRequest $request, string $id)
     {
         $book = Book::findOrFail($id);
-
-        $validated = $request->validate([
-            'title' => 'sometimes|required|string|max:255',
-            'category_id' => 'sometimes|required|exists:categories,id',
-        ]);
-
+        $validated = $request->validated();
         $book->update($validated);
 
         return response()->json([

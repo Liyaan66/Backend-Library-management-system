@@ -30,6 +30,6 @@ Route::prefix('v1')->group(function () {
     Route::apiResource('categories', CategoryController::class);
     Route::apiResource('readers', ReaderController::class);
     Route::apiResource('bookkeepers', BookKeeperController::class);
-    Route::apiResource('borrow-books', BorrowBookController::class);
+    Route::apiResource('borrowbooks', BorrowBookController::class);
     Route::apiResource('timetables', TimetableController::class);
 });

@@ -2,6 +2,8 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CreateBookKeeperRequest;
+use App\Http\Requests\UpdateBookKeeperRequest;
 use App\Models\BookKeeper;
 use Illuminate\Http\Request;
 class BookKeeperController extends Controller
@@ -12,11 +14,9 @@ class BookKeeperController extends Controller
         return BookKeeper::get();
     }
 
-    public function store(Request $request)
+    public function store(CreateBookKeeperRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:25',
-        ]);
+        $request->validated();
 
         BookKeeper::create([
             'name' => $request->name,
@@ -27,15 +27,15 @@ class BookKeeperController extends Controller
 
     public function show(string $id)
     {
-        return BookKeeper::with(['books', 'timetables'])->findOrFail($id);
+        return BookKeeper::findOrFail($id);
     }
 
-    public function update(Request $request, string $id)
+    public function update(UpdateBookKeeperRequest $request, string $id)
     {
         $bookKeeper = BookKeeper::findOrFail($id);
 
         $request->validate([
-            'name' => 'required|string|max:25',
+            
         ]);
 
         $bookKeeper->update([

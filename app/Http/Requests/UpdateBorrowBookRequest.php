@@ -4,14 +4,14 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateBookKeeperRequest extends FormRequest
+class UpdateBorrowBookRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -21,8 +21,11 @@ class CreateBookKeeperRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'name' => 'required|string|max:25',
+         return [
+            'book_id' => 'sometimes|exists:books,id',
+            'reader_id' => 'sometimes|exists:readers,id',
+            'borrowed_at' => 'sometimes|date',
+            'due_date' => 'sometimes|date|after:borrowed_at',
         ];
     }
 }
