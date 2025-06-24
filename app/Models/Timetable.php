@@ -7,10 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Timetable extends Model
 {
-    /** @use HasFactory<\Database\Factories\TimetableFactory> */
     use HasFactory;
-    public function bookKeeper()
-    {
-        return $this->belongsTo(Reader::class);
-    }
+
+    protected $fillable = [
+        'bookkeeper_id',
+        'date',
+        'open_hour',
+        'close_hour',
+    ];
 }
+
+

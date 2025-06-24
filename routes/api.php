@@ -25,7 +25,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
-Route::prefix('v1')->group(function (){
+Route::prefix('v1')->group(function () {
     Route::apiResource('books', BookController::class);
     Route::apiResource('categories', CategoryController::class);
     Route::apiResource('readers', ReaderController::class);
@@ -33,5 +33,3 @@ Route::prefix('v1')->group(function (){
     Route::apiResource('borrow-books', BorrowBookController::class);
     Route::apiResource('timetables', TimetableController::class);
 });
-
-
