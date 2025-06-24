@@ -21,6 +21,7 @@ class ReaderController extends Controller
      */
     public function store(Request $request)
     {
+
         $data = $request->validate([
             'name' => 'required|string',
             'email' => 'required|email',
@@ -38,7 +39,8 @@ class ReaderController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $reader = Reader::FindOrFail($id);
+        return response()->json($reader);
     }
 
     /**
@@ -46,7 +48,21 @@ class ReaderController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $reader = Reader::FindOrFail($id);
+
+
+        $validated = $request->validate([
+            'name' => 'sometimes|required|string|max:25',
+            'email' => 'sometimes|required|string|email|max:25|unique:readers,email,' . $id,
+            'gender' => 'sometimes|required|string',
+        ]);
+
+        $reader->update($validated);
+
+        return response()->json([
+            'message' => 'Reader updated successfully',
+            'data' => $reader
+        ]);
     }
 
     /**
@@ -54,6 +70,11 @@ class ReaderController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $reader = Reader::findOrFail($id);
+        $reader->delete();
+
+        return response([
+            'message' => 'Reader deleted seccessfully'
+        ]);
     }
 }
