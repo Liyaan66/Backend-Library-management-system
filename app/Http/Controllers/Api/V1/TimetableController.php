@@ -3,76 +3,46 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CreateTimetableRequest;
+use App\Http\Requests\UpdateTimetableRequest;
 use App\Models\Timetable;
-use Illuminate\Http\Request;
 
 class TimetableController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-      return response()->json(Timetable::with('bookkeeper')->get(), 200);
+        return response()->json(Timetable::all(), 200);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(CreateTimetableRequest $request)
     {
-        $validated = $request->validate([
-            'bookkeeper_id' => 'required|exists:book_keepers,id',
-            'date' => 'required|date',
-            'open_hour' => 'required|date_format:H:i',
-            'close_hour' => 'required|date_format:H:i',
-        ]);
+        $timetable = Timetable::create($request->validated());
 
-        $timetable = Timetable::create($validated);
-
-        return response()->json($timetable, 201);
+        return response()->json([
+            'message' => 'Timetable created successfully',
+            'data' => $timetable
+        ], 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
-        $timetable = Timetable::with('bookkeeper')->find($id);
+        $timetable = Timetable::findOrFail($id);
 
-        if (!$timetable) {
-            return response()->json(['message' => 'Timetable not found'], 404);
-        }
-
-        return response()->json($timetable);
+        return response()->json($timetable, 200);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(UpdateTimetableRequest $request, string $id)
     {
-        $timetable = Timetable::find($id);
+        $timetable = Timetable::findOrFail($id);
 
-        if (!$timetable) {
-            return response()->json(['message' => 'Timetable not found'], 404);
-        }
+        $timetable->update($request->validated());
 
-        $validated = $request->validate([
-            'bookkeeper_id' => 'sometimes|exists:book_keepers,id',
-            'date' => 'sometimes|date',
-            'open_hour' => 'sometimes|date_format:H:i',
-            'close_hour' => 'sometimes|date_format:H:i',
-        ]);
-
-        $timetable->update($validated);
-
-        return response()->json($timetable);
+        return response()->json([
+            'message' => 'Timetable updated successfully',
+            'data' => $timetable
+        ], 200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
         $timetable = Timetable::find($id);
@@ -84,5 +54,9 @@ class TimetableController extends Controller
         $timetable->delete();
 
         return response()->json(['message' => 'Timetable deleted']);
+        $timetable = Timetable::findOrFail($id);
+        $timetable->delete();
+
+        return response()->json(['message' => 'Timetable deleted successfully'], 200);
     }
 }
