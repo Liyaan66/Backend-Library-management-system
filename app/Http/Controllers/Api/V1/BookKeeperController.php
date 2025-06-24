@@ -8,7 +8,6 @@ class BookKeeperController extends Controller
 {
     public function index()
     {
-        // Correct relationships
         return BookKeeper::get();
     }
 

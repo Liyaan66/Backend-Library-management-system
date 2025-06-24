@@ -13,7 +13,7 @@ class BorrowBookController extends Controller
      */
     public function index()
     {
-        return BorrowBook::with(['book', 'reader'])->get(); 
+        return BorrowBook::all(); 
     }
 
     /**
@@ -41,8 +41,7 @@ class BorrowBookController extends Controller
      */
     public function show(string $id)
     {
-        $borrow = BorrowBook::with(['book', 'reader'])->findOrFail($id);
-        return response()->json($borrow);
+        //
     }
 
     /**
