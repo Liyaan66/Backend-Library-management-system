@@ -22,10 +22,12 @@ class CreateBorrowBookRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'book_id' => 'sometimes|exists:books,id',
-            'reader_id' => 'sometimes|exists:readers,id',
-            'borrowed_at' => 'sometimes|date',
-            'due_date' => 'sometimes|date|after:borrowed_at',
+            'quantity' => 'required|integer|min:1',
+            'book_id' => 'required|exists:books,id',
+            'reader_id' => 'required|exists:readers,id',
+            'bookkeeper_id' => 'nullable|exists:book_keepers,id',
+            'borrowed_at' => 'required|date',
+            'returned_at' => 'nullable|date|after_or_equal:borrowed_at',
         ];
     }
 }

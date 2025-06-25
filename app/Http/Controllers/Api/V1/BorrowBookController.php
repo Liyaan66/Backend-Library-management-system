@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateBorrowBookRequest;
-use App\Http\Requests\UpdateBookKeeperRequest;
+use App\Http\Requests\UpdateBorrowBookRequest;
 use App\Models\BorrowBook;
 use Illuminate\Http\Request;
 
@@ -40,11 +40,23 @@ class BorrowBookController extends Controller
     {
         //
     }
+    public function markAsReturned($id)
+    {
+        $borrowing = BorrowBook::findOrFail($id);
+
+        $borrowing->returned_at = now(); // or you can take date from request
+        $borrowing->save();
+
+        return response()->json([
+            'message' => 'Book returned successfully',
+            'data' => $borrowing
+        ], 200);
+    }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateBookKeeperRequest $request, string $id)
+    public function update(UpdateBorrowBookRequest $request, string $id)
     {
         $borrow = BorrowBook::findOrFail($id);
 

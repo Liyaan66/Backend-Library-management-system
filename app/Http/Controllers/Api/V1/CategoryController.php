@@ -30,12 +30,13 @@ class CategoryController extends Controller
 
     public function show(string $id)
     {
-        try {
-            $category = Category::findOrFail($id);
-            return response()->json($category, 200);
-        } catch (ModelNotFoundException $e) {
-            return response()->json(['error' => 'Category not found'], 404);
+        $category = Category::find($id);
+
+        if (!$category) {
+            return response()->json(['message' => 'Category not found'], 404);
         }
+
+        return response()->json($category);
     }
 
     public function update(UpdateCategoryRequest $request, string $id)
@@ -58,15 +59,14 @@ class CategoryController extends Controller
 
     public function destroy(string $id)
     {
-        try {
-            $category = Category::findOrFail($id);
-            $category->delete();
+        $category = Category::find($id);
 
-            return response()->json(['message' => 'Category deleted successfully'], 200);
-        } catch (ModelNotFoundException $e) {
-            return response()->json(['error' => 'Category not found'], 404);
-        } catch (Exception $e) {
-            return response()->json(['error' => 'Deletion failed'], 500);
+        if (!$category) {
+            return response()->json(['message' => 'Category not found'], 404);
         }
+
+        $category->delete();
+
+        return response()->json(['message' => 'Category deleted successfully']);
     }
 }

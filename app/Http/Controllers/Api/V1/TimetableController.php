@@ -45,6 +45,7 @@ class TimetableController extends Controller
 
     public function destroy(string $id)
     {
+<<<<<<<<< Temporary merge branch 1
         $timetable = Timetable::find($id);
 
         if (!$timetable) {
@@ -54,6 +55,7 @@ class TimetableController extends Controller
         $timetable->delete();
 
         return response()->json(['message' => 'Timetable deleted']);
+=========
         $timetable = Timetable::findOrFail($id);
         $timetable->delete();
 

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
@@ -6,6 +7,7 @@ use App\Http\Requests\CreateBookKeeperRequest;
 use App\Http\Requests\UpdateBookKeeperRequest;
 use App\Models\BookKeeper;
 use Illuminate\Http\Request;
+
 class BookKeeperController extends Controller
 {
     public function index()
@@ -15,13 +17,11 @@ class BookKeeperController extends Controller
 
     public function store(CreateBookKeeperRequest $request)
     {
-        $request->validated();
+        $validated = $request->validated();
 
-        BookKeeper::create([
-            'name' => $request->name,
-        ]);
+        $bookKeeper = BookKeeper::create($validated);
 
-        return response()->json(['message' => 'Book Keeper has been created!']);
+        return response()->json(['message' => 'Book Keeper has been created!', 'data' =>  $bookKeeper], 201);
     }
 
     public function show(string $id)
@@ -33,15 +33,11 @@ class BookKeeperController extends Controller
     {
         $bookKeeper = BookKeeper::findOrFail($id);
 
-        $request->validate([
-            
-        ]);
+        $validated = $request->validated();
 
-        $bookKeeper->update([
-            'name' => $request->name,
-        ]);
+        $bookKeeper->update($validated);
 
-        return response()->json(['message' => 'Book Keeper updated successfully']);
+        return response()->json(['message' => 'Book Keeper updated successfully', 'data' => $bookKeeper]);
     }
 
     public function destroy(string $id)

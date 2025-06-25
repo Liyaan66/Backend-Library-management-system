@@ -16,7 +16,7 @@ return new class extends Migration
             $table->integer('quantity');
             $table->foreignId('book_id')->constrained('books')->onDelete('cascade');
             $table->foreignId('reader_id')->constrained('readers')->onDelete('cascade');
-            $table->foreignId('bookkeeper_id')->constrained('book_keepers')->onDelete('cascade');
+            $table->foreignId('bookkeeper_id')->nullable()->constrained('book_keepers')->onDelete('cascade');
             $table->date('borrowed_at');
             $table->date('returned_at')->nullable();
             $table->timestamps();
