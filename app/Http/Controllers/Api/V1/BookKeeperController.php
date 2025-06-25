@@ -1,9 +1,13 @@
 <?php
+
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CreateBookKeeperRequest;
+use App\Http\Requests\UpdateBookKeeperRequest;
 use App\Models\BookKeeper;
 use Illuminate\Http\Request;
+
 class BookKeeperController extends Controller
 {
     public function index()
@@ -11,37 +15,29 @@ class BookKeeperController extends Controller
         return BookKeeper::get();
     }
 
-    public function store(Request $request)
+    public function store(CreateBookKeeperRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:25',
-        ]);
+        $validated = $request->validated();
 
-        BookKeeper::create([
-            'name' => $request->name,
-        ]);
+        $bookKeeper = BookKeeper::create($validated);
 
-        return response()->json(['message' => 'Book Keeper has been created!']);
+        return response()->json(['message' => 'Book Keeper has been created!', 'data' =>  $bookKeeper], 201);
     }
 
     public function show(string $id)
     {
-        return BookKeeper::find($id);
+        return BookKeeper::findOrFail($id);
     }
 
-    public function update(Request $request, string $id)
+    public function update(UpdateBookKeeperRequest $request, string $id)
     {
         $bookKeeper = BookKeeper::findOrFail($id);
 
-        $request->validate([
-            'name' => 'required|string|max:25',
-        ]);
+        $validated = $request->validated();
 
-        $bookKeeper->update([
-            'name' => $request->name,
-        ]);
+        $bookKeeper->update($validated);
 
-        return response()->json(['message' => 'Book Keeper updated successfully']);
+        return response()->json(['message' => 'Book Keeper updated successfully', 'data' => $bookKeeper]);
     }
 
     public function destroy(string $id)

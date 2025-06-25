@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CreateReaderRequest;
+use App\Http\Requests\UpdateReaderRequest;
 use App\Models\Reader;
 use Illuminate\Http\Request;
 
@@ -19,18 +21,16 @@ class ReaderController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
-        $data = $request->validate([
-            'name' => 'required|string',
-            'email' => 'required|email',
-            'gender' => 'required|string'
-        ]);
+    public function store(CreateReaderRequest $request)
+{
+    $reader = Reader::create($request->validated());
 
-        Reader::create($data);
+    return response()->json([
+        'message' => 'Reader created successfully',
+        'data' => $reader
+    ], 201);
+}
 
-        return response()->json(['message' => 'Reader added successfully'], 201);
-    }
 
 
     /**
@@ -38,29 +38,26 @@ class ReaderController extends Controller
      */
     public function show(string $id)
     {
-        return Reader::find($id);
+        $reader = Reader::FindOrFail($id);
+        return response()->json($reader);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateReaderRequest $request, string $id)
     {
-        $reader = Reader::find($id);
+        $reader = Reader::FindOrFail($id);
 
-        if (!$reader) {
-            return response()->json(['message' => 'reader not found'], 404);
-        }
 
-        $validated = $request->validate([
-            'name' => 'sometimes|string|max:255',
-            'email' => 'sometimes|email',
-            'gender' => 'sometimes|string'
-        ]);
+        $validated = $request->validated();
 
         $reader->update($validated);
 
-        return response()->json($reader);
+        return response()->json([
+            'message' => 'Reader updated successfully',
+            'data' => $reader
+        ]);
     }
 
     /**
@@ -68,6 +65,7 @@ class ReaderController extends Controller
      */
     public function destroy(string $id)
     {
+<<<<<<< HEAD
         $reader = Reader::find($id);
 
         if (!$reader) {
@@ -77,5 +75,13 @@ class ReaderController extends Controller
         $reader->delete();
 
         return response()->json(['message' => 'reader deleted successfully']);
+=======
+        $reader = Reader::findOrFail($id);
+        $reader->delete();
+
+        return response([
+            'message' => 'Reader deleted seccessfully'
+        ]);
+>>>>>>> master
     }
 }
