@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CreateBorrowBookRequest;
+use App\Http\Requests\UpdateBorrowBookRequest;
 use App\Models\BorrowBook;
 use Illuminate\Http\Request;
 
@@ -13,20 +15,15 @@ class BorrowBookController extends Controller
      */
     public function index()
     {
-        return BorrowBook::all(); 
+        return BorrowBook::with(['book', 'reader'])->get(); 
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CreateBorrowBookRequest $request)
     {
-        $validated = $request->validate([
-            'book_id' => 'required|exists:books,id',
-            'reader_id' => 'required|exists:readers,id',
-            'borrowed_at' => 'required|date',
-            'due_date' => 'required|date|after:borrowed_at',
-        ]);
+        $validated = $request->validated();
 
         $borrow = BorrowBook::create($validated);
 
@@ -43,20 +40,27 @@ class BorrowBookController extends Controller
     {
         //
     }
+    public function markAsReturned($id)
+    {
+        $borrowing = BorrowBook::findOrFail($id);
+
+        $borrowing->returned_at = now(); // or you can take date from request
+        $borrowing->save();
+
+        return response()->json([
+            'message' => 'Book returned successfully',
+            'data' => $borrowing
+        ], 200);
+    }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateBorrowBookRequest $request, string $id)
     {
         $borrow = BorrowBook::findOrFail($id);
 
-        $validated = $request->validate([
-            'book_id' => 'sometimes|exists:books,id',
-            'reader_id' => 'sometimes|exists:readers,id',
-            'borrowed_at' => 'sometimes|date',
-            'due_date' => 'sometimes|date|after:borrowed_at',
-        ]);
+        $validated = $request->validated();
 
         $borrow->update($validated);
 

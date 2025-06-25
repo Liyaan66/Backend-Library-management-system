@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CreateReaderRequest;
+use App\Http\Requests\UpdateReaderRequest;
 use App\Models\Reader;
 use Illuminate\Http\Request;
 
@@ -19,19 +21,16 @@ class ReaderController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
+    public function store(CreateReaderRequest $request)
+{
+    $reader = Reader::create($request->validated());
 
-        $data = $request->validate([
-            'name' => 'required|string',
-            'email' => 'required|email',
-            'gender' => 'required|string'
-        ]);
+    return response()->json([
+        'message' => 'Reader created successfully',
+        'data' => $reader
+    ], 201);
+}
 
-        Reader::create($data);
-
-        return response()->json(['message' => 'Reader added successfully'], 201);
-    }
 
 
     /**
@@ -46,16 +45,12 @@ class ReaderController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateReaderRequest $request, string $id)
     {
         $reader = Reader::FindOrFail($id);
 
 
-        $validated = $request->validate([
-            'name' => 'sometimes|required|string|max:25',
-            'email' => 'sometimes|required|string|email|max:25|unique:readers,email,' . $id,
-            'gender' => 'sometimes|required|string',
-        ]);
+        $validated = $request->validated();
 
         $reader->update($validated);
 

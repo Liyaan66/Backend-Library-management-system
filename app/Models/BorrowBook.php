@@ -9,7 +9,19 @@ class BorrowBook extends Model
 {
     /** @use HasFactory<\Database\Factories\BorrowBookFactory> */
     use HasFactory;
-        public function book()
+
+    // ✅ Mass assignable fields
+    protected $fillable = [
+        'quantity',
+        'book_id',
+        'reader_id',
+        'bookkeeper_id',
+        'borrowed_at',
+        'returned_at',
+    ];
+
+    // ✅ Relationships
+    public function book()
     {
         return $this->belongsTo(Book::class);
     }
@@ -18,4 +30,10 @@ class BorrowBook extends Model
     {
         return $this->belongsTo(Reader::class);
     }
+
+    public function bookkeeper()
+    {
+        return $this->belongsTo(BookKeeper::class);
+    }
 }
+
