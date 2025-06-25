@@ -21,6 +21,5 @@ class Reader extends Model
             ->withPivot('borrowed_at', 'returned_at')
             ->withTimestamps();
     }
-    protected $fillable = ['name', 'email', 'gender'];
 
 }
