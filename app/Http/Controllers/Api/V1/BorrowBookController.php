@@ -41,11 +41,23 @@ class BorrowBookController extends Controller
         $borrow = BorrowBook::with(['book', 'reader'])->findOrFail($id);
         return response()->json($borrow);
     }
+    public function markAsReturned($id)
+    {
+        $borrowing = BorrowBook::findOrFail($id);
+
+        $borrowing->returned_at = now(); // or you can take date from request
+        $borrowing->save();
+
+        return response()->json([
+            'message' => 'Book returned successfully',
+            'data' => $borrowing
+        ], 200);
+    }
 
     /**
      * Update the specified resource in storage.
      */
-   public function update(UpdateBorrowBookRequest $request, string $id)
+    public function update(UpdateBorrowBookRequest $request, string $id)
     {
         $borrow = BorrowBook::findOrFail($id);
 

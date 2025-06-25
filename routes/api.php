@@ -33,3 +33,4 @@ Route::prefix('v1')->group(function () {
     Route::apiResource('borrowbooks', BorrowBookController::class);
     Route::apiResource('timetables', TimetableController::class);
 });
+Route::patch('/v1/borrowbooks/{id}/return', [BorrowBookController::class, 'markAsReturned']);

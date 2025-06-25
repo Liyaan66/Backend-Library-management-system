@@ -25,7 +25,7 @@ class UpdateBorrowBookRequest extends FormRequest
             'quantity' => 'required|integer|min:1',
             'book_id' => 'required|exists:books,id',
             'reader_id' => 'required|exists:readers,id',
-            'bookkeeper_id' => 'required|exists:book_keepers,id',
+            'bookkeeper_id' => 'nullable|exists:book_keepers,id',
             'borrowed_at' => 'required|date',
             'returned_at' => 'nullable|date|after_or_equal:borrowed_at',
         ];
